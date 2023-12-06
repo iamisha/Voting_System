@@ -1,4 +1,3 @@
-# voter_registration.py
 
 import csv
 import datetime
@@ -47,7 +46,6 @@ def calculate_age(dob):
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     return age
 
-# Example usage
+
 register_voter()
-generate_serial_number()
 
