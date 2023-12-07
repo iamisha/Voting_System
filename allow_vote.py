@@ -8,8 +8,8 @@ def does_exist(sno, password, data):
     for lst in data: 
         if sno in lst:
             if password in lst:
-                return 1
-    return 0
+                return 1, lst
+    return 0, 0
 
 def vote(candidate_id, lst):
     data = read_file(headers, FILE_NAME)

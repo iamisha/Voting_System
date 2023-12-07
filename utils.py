@@ -21,13 +21,15 @@ def write_file(data, headers, FILE_NAME):
 
     print("Written successfully")
 
-def read_file(headers, FILE_NAME):
+def read_file(headers=None, FILE_NAME=None):
     with open(FILE_NAME, 'r+') as f:
         lines = f.readlines()
 
         if len(lines) == 0:
-            f.write(','.join(headers))
             print("No data in file")
+            if headers:
+                f.write(','.join(headers))
+                return []
             return []
         
     raw_data = lines[1:]

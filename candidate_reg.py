@@ -1,4 +1,5 @@
 from utils import create_unique, read_file, write_file
+from tabulate import tabulate
 
 FILE_NAME = 'candidate.txt'
 
@@ -51,3 +52,7 @@ class Candidate:
             return
             
         print("Cannot find data")
+    
+    def show():
+        data = read_file(headers=headers, FILE_NAME=FILE_NAME)
+        print(tabulate(data, headers=headers))
