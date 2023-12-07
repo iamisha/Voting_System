@@ -1,7 +1,8 @@
 from admin import AdminLogin, Constitution
-from voters import VotersLogin, VoteCasting, Result, VoterCount
-from add_voters import Voterlist
+from voters import Result, VoteCasting, VotersLogin, VoterCount
+from add_voters import VoterSystem
 from tabulate import tabulate
+
 
 def main():
     print("Welcome To Nepal Government E-Voting Panel, Vote for Great Country")
@@ -34,7 +35,9 @@ def admin_portal(admin_login):
         print("4) Show Candidates")
         print("5) Add Voters")
         print("6) Show Voter List")
-        print("7) Participants")
+        print("7) Update Voter List")
+        print("8) Delete Voter List")
+        print("9) Participants")
         print("#) Go back")
         choice = input("Enter your choice: ")
 
@@ -47,13 +50,20 @@ def admin_portal(admin_login):
         elif choice == '4':
             Constitution.show_candidates()
         elif choice == '5':
-            Voterlist.add_voter()
+            VoterSystem().register_voter()
         elif choice == '6':
-            Voterlist.show_voter_list_admin()
+            VoterSystem().view_voter_list()
         elif choice == '7':
+            voter_sno = input("Enter Voter SNO: ")
+            new_password = input("Enter New Password: ")
+            VoterSystem().update_voter_details(voter_sno, new_password)
+        elif choice == '8':
+            voter_sno = input("Enter Voter SNO: ")
+            VoterSystem().delete_voter(voter_sno)
+        elif choice == '9':
             VoterCount.count_voters()
         elif choice == '#':
-            print("Going back to main menu.")
+            print("Going back to the main menu.")
             break
         else:
             print("Invalid choice. Please enter a valid option.")
@@ -71,20 +81,18 @@ def voter_portal(voter_login):
 
         if choice == '1':
             Constitution.show_constituencies()
-            pass
         elif choice == '2':
             Constitution.show_candidates()
-            pass
         elif choice == '3':
-           Voterlist.show_voter_list()
+            VoterSystem().view_voter_list()
         elif choice == '4':
-            # Implement search voter logic
-            pass
+            voter_sno = input("Enter Voter SNO: ")
+            VoterSystem().search_voter_details(voter_sno)
         elif choice == '5':
             VoteCasting.cast_vote("Constituency_Name")
             pass
         elif choice == '#':
-            print("Going back to main menu.")
+            print("Going back to the main menu.")
             break
         else:
             print("Invalid choice. Please enter a valid option.")
@@ -94,4 +102,3 @@ def show_results():
 
 if __name__ == "__main__":
     main()
-

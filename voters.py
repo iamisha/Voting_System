@@ -7,7 +7,7 @@ class VotersLogin:
         voter_sno = input("Enter Voter's Serial Number: ")
         password = input("Enter Password: ")
 
-        with open("voterlist.txt", "r") as file:
+        with open("doc_files/voterlist.txt", "r") as file:
             lines = file.readlines()
             for line in lines:
                 voter_info = line.strip().split("\t")
@@ -29,7 +29,7 @@ class VoteCasting():
         candidacy_from = input("Enter Candidacy From (Location): ")
         candidate_name = input("Enter Candidate Name: ")
 
-        with open("candidatelist.txt", "r") as file:
+        with open("doc_files/candidatelist.txt", "r") as file:
             lines = file.readlines()
             for line in lines:
                 candidate_info = line.strip().split("\t")
@@ -42,7 +42,7 @@ class VoteCasting():
 
     @staticmethod
     def has_already_voted(voter_sno):
-        voted_file_path = "voted.txt"
+        voted_file_path = "doc_files/voted.txt"
 
 
         if not os.path.exists(voted_file_path):
@@ -59,12 +59,12 @@ class VoteCasting():
 
     @staticmethod
     def record_voted(voter_sno):
-        with open("voted.txt", "a") as file:
+        with open("doc_files/voted.txt", "a") as file:
             file.write(f"{voter_sno}\n")
 
     @staticmethod
     def record_vote(candidate_name):
-        with open("votecount.txt", "a") as file:
+        with open("doc_files/votecount.txt", "a") as file:
             file.write(f"{candidate_name}\n")
 
 class Result:
@@ -81,7 +81,7 @@ class Result:
     @staticmethod
     def count_votes():
         votes_count = {}
-        with open("votecount.txt", "r") as file:
+        with open("doc_files/votecount.txt", "r") as file:
             lines = file.readlines()
             for line in lines:
                 candidate_name = line.strip()
@@ -100,7 +100,7 @@ class Result:
 class VoterCount:
     @classmethod
     def count_voters(cls):
-        with open("voterlist.txt", "r") as file:
+        with open("doc_files/voterlist.txt", "r") as file:
             lines = file.readlines()
             total_voters = len(lines)
             print(f"Total number of voters: {total_voters}")

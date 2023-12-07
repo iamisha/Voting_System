@@ -1,5 +1,0 @@
-1	Sameer	1999/10/01	Kathmandu	11865346
-2	Saan	2000/01/01	Butwal	27173834
-3	Ravi Nepal	1988/11/09	Taplejung	26201643
-4	Me	1977/10/10	Taplejung	82064868
-5	Him	1999/04/06	Taplejung	79733611

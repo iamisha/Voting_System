@@ -11,7 +11,7 @@ class AdminLogin:
             self.username = input("Enter your username: ")
             self.password = getpass.getpass("Enter your password: ")
 
-            with open("login_info.txt", "r") as file:
+            with open("doc_files/login_info.txt", "r") as file:
                 lines = file.readlines()
                 for i in range(0, len(lines), 3):
                     if (
@@ -29,14 +29,14 @@ class Constitution:
         constituency_name = input("Enter Constituency Name: ")
         election_date = input("Enter Date of Election (YYYY/MM/DD): ")
 
-        with open("schedule.txt", "a") as file:
+        with open("doc_files/schedule.txt", "a") as file:
             file.write(f"{constituency_name}\t{election_date}\n")
 
         print("Constituency added successfully.")
         
     @classmethod
     def get_latest_election_date(cls):
-        with open("schedule.txt", "r") as file:
+        with open("doc_files/schedule.txt", "r") as file:
             lines = file.readlines()
 
         if not lines:
@@ -47,7 +47,7 @@ class Constitution:
 
     @classmethod
     def show_constituencies(cls):
-        with open("schedule.txt", "r") as file:
+        with open("doc_files/schedule.txt", "r") as file:
             lines = file.readlines()
             data = [line.strip().split("\t") for line in lines]
 
@@ -62,7 +62,7 @@ class Constitution:
         candidacy_from = input("Enter Candidacy From: ")
 
         if cls.constituency_exists(candidacy_from):
-            with open("candidatelist.txt", "a") as file:
+            with open("doc_files/candidatelist.txt", "a") as file:
                 file.write(f"{candidate_name}\t{political_party}\t{candidacy_from}\n")
 
             print("Candidate added successfully.")
@@ -71,7 +71,7 @@ class Constitution:
 
     @classmethod
     def constituency_exists(cls, constituency_name):
-        with open("schedule.txt", "r") as file:
+        with open("doc_files/schedule.txt", "r") as file:
             lines = file.readlines()
             constituencies = [line.split("\t")[0] for line in lines]
 
@@ -79,7 +79,7 @@ class Constitution:
 
     @classmethod
     def show_candidates(cls):
-        with open("candidatelist.txt", "r") as file:
+        with open("doc_files/candidatelist.txt", "r") as file:
             lines = file.readlines()
             data = [line.strip().split("\t") for line in lines]
 
