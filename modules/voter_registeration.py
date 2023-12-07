@@ -1,7 +1,8 @@
-# File: modules/voter_reg.py
+
 import datetime
 from tabulate import tabulate
 import getpass
+import os
 
 class VoterSystem:
     def __init__(self):
@@ -35,6 +36,18 @@ class VoterSystem:
         with open(self.voter_list_file, "w") as file:
             file.write("\n".join(updated_data))
         print("Voter details updated successfully!")
+
+    def delete_voter(self, voter_sno):
+        temp_file = "doc_files/temp_voterlist.txt"
+        with open(self.voter_list_file, "r") as file, open(temp_file, "w") as temp:
+            for line in file:
+                data = line.strip().split("\t")
+                if data[0] != voter_sno:
+                    temp.write(line)
+
+        os.remove(self.voter_list_file)
+        os.rename(temp_file, self.voter_list_file)
+        print("Voter details deleted successfully!")
 
     def search_voter_details(self, voter_sno):
         with open(self.voter_list_file, "r") as file:
