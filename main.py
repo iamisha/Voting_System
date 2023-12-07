@@ -3,6 +3,13 @@ from voters import Result, VoteCasting, VotersLogin, VoterCount
 from add_voters import VoterSystem
 from tabulate import tabulate
 
+# new
+from candidate_reg import Candidate
+import allow_vote
+from utils import read_file
+
+cn = Candidate()
+######################################
 
 def main():
     print("Welcome To Nepal Government E-Voting Panel, Vote for Great Country")
@@ -32,6 +39,8 @@ def admin_portal(admin_login):
         print("1) Add Constituency")
         print("2) Show Constituency")
         print("3) Add Candidates")
+        print("3.1) Update Candidate")
+        print("3.2) Delete candidate")
         print("4) Show Candidates")
         print("5) Add Voters")
         print("6) Show Voter List")
@@ -46,9 +55,43 @@ def admin_portal(admin_login):
         elif choice == '2':
             Constitution.show_constituencies()
         elif choice == '3':
-            Constitution.add_candidates()
+            name = input("Enter name: ")
+            party = input("Enter party: ")
+            address = input("Enter address: ")
+            cn.add(name, party, address)
+
+        elif choice == '3.1':
+            id = input("Enter id: ")
+
+            stat, idx, lst = cn.does_exist(id)
+
+            if not stat:
+                print("DOes not exist")
+                continue
+            else:
+                ch = int(input("What to update:\n\t1) name\n\t 2) party \n\t3) address "))
+
+                name = lst[1]
+                party = lst[2]
+                address = lst[3]
+
+                if ch == 1:
+                    name = input("Enter name: ")
+                elif ch==2:
+                    party = input("Enter party: ")
+                else:
+                    address = input("Enter address: ")
+                
+                cn.add(name, party, address, update=True, idx=idx)
+              
+
+        elif choice == '3.2':
+            id = input("ENter id: ")
+            cn.delete(id)
+
         elif choice == '4':
-            Constitution.show_candidates()
+            cn.show()
+
         elif choice == '5':
             VoterSystem().register_voter()
         elif choice == '6':
@@ -82,15 +125,38 @@ def voter_portal(voter_login):
         if choice == '1':
             Constitution.show_constituencies()
         elif choice == '2':
-            Constitution.show_candidates()
+            cn.show()
         elif choice == '3':
             VoterSystem().view_voter_list()
         elif choice == '4':
             voter_sno = input("Enter Voter SNO: ")
             VoterSystem().search_voter_details(voter_sno)
+        #new
         elif choice == '5':
-            VoteCasting.cast_vote("Constituency_Name")
-            pass
+            headers = ['sno', 'name', 'dob', 'address', 'passowrd', 'voted']
+            sno = input("Enter sno: ")
+            password = input("Enter username: ")
+
+            dat = read_file(headers=None, FILE_NAME='doc_files/voterlist.txt')
+
+            stat, lst = allow_vote.does_exist(sno, password, dat)
+            
+            if stat:
+
+                if lst[-1] == '0':
+                    id = input("Enter candidate id: ")
+
+                    stat, _, lst = cn.does_exist(id)
+
+                    if stat:
+                        allow_vote.vote(id, lst)
+                        print("Voted")
+                    else:
+                        print("Cannot find candidate")       
+            else:
+                print("Already voted")    
+
+
         elif choice == '#':
             print("Going back to the main menu.")
             break
