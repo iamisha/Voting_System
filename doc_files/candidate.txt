@@ -1,7 +1,4 @@
 S.N,ID,Name,Party,Address
-1,CWxfjYWNcOs2e3x,sada,sasaf,f
-2,o1HwkWgyORVzKXN,sada,sfsaf,as
-3,a2ocesKoATF7UDq,dasdsaf,sa,afs
-4,PuHZztOVIR7xDYp,safads,saf,sa
-5,qDF9rEk-1m0EZbt,asfs,asf,s
-6,Vl1g1XRd4C_DkJx,Isha Hitang,as,Kathmandu
+1,Gb_tleohgB775dQ,dasfas,dsfs,fasf
+2,_l-cfjRfjPzWyOV,dsaas,afsas,wafaw
+3,srVJjP4yPAdYDQY,fgrgh,sdg,dsgs

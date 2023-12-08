@@ -6,7 +6,7 @@ from tabulate import tabulate
 # new
 from candidate_reg import Candidate
 import allow_vote
-from utils import read_file
+from utils import read_file, write_file
 
 cn = Candidate()
 ######################################
@@ -22,9 +22,9 @@ def main():
             admin_login.authenticate()
             admin_portal(admin_login)
         elif user_type == 'B':
-            voter_login = VotersLogin()
-            voter_login.login()
-            voter_portal(voter_login)
+            #voter_login = VotersLogin()
+            #voter_login.login()
+            voter_portal('voter_login')
         elif user_type == 'C':
             show_results()
         elif user_type == 'Q':
@@ -116,9 +116,9 @@ def voter_portal(voter_login):
         print("\nVoter Portal:")
         print("1) Show Constituency")
         print("2) Show Candidates")
-        print("3) Show all Voter List")
-        print("4) Search Voter")
-        print("5) Vote")
+        # print("3) Show all Voter List")
+        # print("4) Search Voter")
+        print("3) Vote")
         print("#) Go back")
         choice = input("Enter your choice: ")
 
@@ -126,30 +126,37 @@ def voter_portal(voter_login):
             Constitution.show_constituencies()
         elif choice == '2':
             cn.show()
-        elif choice == '3':
-            VoterSystem().view_voter_list()
-        elif choice == '4':
-            voter_sno = input("Enter Voter SNO: ")
-            VoterSystem().search_voter_details(voter_sno)
+        # elif choice == '3':
+        #     VoterSystem().view_voter_list()
+        # elif choice == '4':
+        #     voter_sno = input("Enter Voter SNO: ")
+        #     VoterSystem().search_voter_details(voter_sno)
         #new
-        elif choice == '5':
-            headers = ['sno', 'name', 'dob', 'address', 'passowrd', 'voted']
+        elif choice == '3':
+            headers = ['sno', 'name', 'dob', 'address', 'password', 'vote_status']
             sno = input("Enter sno: ")
-            password = input("Enter username: ")
+            password = input("Enter password: ")
 
             dat = read_file(headers=None, FILE_NAME='doc_files/voterlist.txt')
 
-            stat, lst = allow_vote.does_exist(sno, password, dat)
+            stat, v_lst = allow_vote.does_exist(sno, password, dat)
             
             if stat:
-
-                if lst[-1] == '0':
+                if v_lst[-1] == '0':
                     id = input("Enter candidate id: ")
 
                     stat, _, lst = cn.does_exist(id)
 
                     if stat:
                         allow_vote.vote(id, lst)
+
+                        idx = dat.index(v_lst)
+
+                        v_lst[-1] = '1'
+
+                        dat[idx] = v_lst
+
+                        write_file(dat, headers, 'doc_files/voterlist.txt')
                         print("Voted")
                     else:
                         print("Cannot find candidate")       

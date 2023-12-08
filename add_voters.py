@@ -1,14 +1,16 @@
 from datetime import datetime
 from tabulate import tabulate
-from admin import AdminLogin, Constitution
+#from admin import AdminLogin, Constitution
 import uuid
-import os
+#import os
 import getpass
+from utils import read_file, write_file
 
 class VoterSystem:
     def __init__(self):
         self.voter_list_file = "doc_files/voterlist.txt"
         self.voter_data = []
+        self.headers = ['SN', 'sno', 'name', 'dob', 'address', 'password', 'vote_status']
 
     def register_voter(self):
         voter_sno = self.generate_voter_sno()
@@ -18,48 +20,82 @@ class VoterSystem:
         password = getpass.getpass("Enter Password: ")
 
         if self.check_eligibility(dob):
-            voter_entry = f"{voter_sno}\t{name}\t{dob}\t{address}\t{password}\n"
-            with open(self.voter_list_file, "a") as file:
-                file.write(voter_entry)
+            
+            voter_entry = [voter_sno, name, dob, address, password, '0']
+        #     with open(self.voter_list_file, "a") as file:
+        #         file.write(voter_entry)
+            
+            data = read_file(headers=None, FILE_NAME=self.voter_list_file)
+
+            data.append(voter_entry)
+
+            write_file(data, self.headers, self.voter_list_file)
+
             print("Voter registered successfully!")
         else:
             print("Voter is not eligible due to age.")
 
     def update_voter_details(self, voter_sno, new_password):
-        updated_data = []
-        with open(self.voter_list_file, "r") as file:
-            for line in file:
-                data = line.strip().split("\t")
-                if data[0] == voter_sno:
-                    data[-1] = new_password
-                updated_data.append("\t".join(data))
+        # with open(self.voter_list_file, "r") as file:
+        #     for line in file:
+        #         data = line.strip().split("\t")
+        #         if data[0] == voter_sno:
+        #             data[-1] = new_password
+        #         updated_data.append("\t".join(data))
         
-        with open(self.voter_list_file, "w") as file:
-            file.write("\n".join(updated_data))
-        print("Voter details updated successfully!")
+        # with open(self.voter_list_file, "w") as file:
+        #     file.write("\n".join(updated_data))
+
+        data = read_file(headers=None, FILE_NAME=self.voter_list_file)
+
+        for lst in data:
+            if lst[0] == voter_sno:
+                idx = data.index(lst)
+                data[idx][-2]=new_password
+                write_file(data, headers=self.headers)
+                print("Voter details updated successfully!")
+                return
+        
+        print("SNO not found")
 
     def delete_voter(self, voter_sno):
-        temp_file = "doc_files/temp_voterlist.txt"
-        with open(self.voter_list_file, "r") as file, open(temp_file, "w") as temp:
-            for line in file:
-                data = line.strip().split("\t")
-                if data[0] != voter_sno:
-                    temp.write(line)
+        # temp_file = "doc_files/temp_voterlist.txt"
+        # with open(self.voter_list_file, "r") as file, open(temp_file, "w") as temp:
+        #     for line in file:
+        #         data = line.strip().split("\t")
+        #         if data[0] != voter_sno:
+        #             temp.write(line)
 
-        os.remove(self.voter_list_file)
-        os.rename(temp_file, self.voter_list_file)
-        print("Voter details deleted successfully!")
+        # os.remove(self.voter_list_file)
+        # os.rename(temp_file, self.voter_list_file)
 
+        data = read_file(headers=None, FILE_NAME=self.voter_list_file)
+
+        for lst in data:
+            if lst[0] == str(voter_sno):
+                if lst[-1] == '1':
+                    print("VOter has already voted cannot delete")
+                    return
+                else:
+                    data.remove(lst)
+                    print("Removed voter")
+                    write_file(data, headers=self.headers, FILE_NAME=self.voter_list_file)
+                    print("Voter details deleted successfully!")
+                    return
+
+        
     def search_voter_details(self, voter_sno):
-        with open(self.voter_list_file, "r") as file:
-            voter_data = [line.strip().split("\t") for line in file]
+        # with open(self.voter_list_file, "r") as file:
+        #     voter_data = [line.strip().split("\t") for line in file]
 
-        for data in voter_data:
-            if data[0] == voter_sno:
+        data = read_file(headers=None, FILE_NAME=self.voter_list_file)
+
+        for lst in data:
+            if lst[0] == voter_sno:
                 # Replace the password with '*' characters
-                data[-1] = '*' * len(data[-1])
-                headers = ["Voter SNO", "Name", "Date of Birth", "Address", "Password"]
-                print(tabulate([data], headers=headers, tablefmt="grid"))
+                lst[-2] = '*' * len(lst[-2])
+                #headers = ["Voter SNO", "Name", "Date of Birth", "Address", "Password"]
+                print(tabulate([lst], headers=self.headers, tablefmt="grid"))
                 return
 
         print("Voter not found.")
@@ -71,46 +107,51 @@ class VoterSystem:
     
     def view_voter_list(self):
         print("Voter List:")
-        with open(self.voter_list_file, "r") as file:
-            voter_data = [line.strip().split("\t") for line in file]
+        # with open(self.voter_list_file, "r") as file:
+        #     voter_data = [line.strip().split("\t") for line in file]
+
+        data = read_file(headers=None, FILE_NAME=self.voter_list_file)
 
         # Replace the password with '*' characters
-        for data in voter_data:
-            data[-1] = '*' * len(data[-1])
+        for lst in data:
+            lst[-2] = '*' * len(lst[-2])
 
-        headers = ["Voter SNO", "Name", "Date of Birth", "Address", "Password"]
-        print(tabulate(voter_data, headers=headers, tablefmt="grid"))
+        
+        #headers = ["Voter SNO", "Name", "Date of Birth", "Address", "Password"]
+        print(tabulate(data, headers=self.headers[1:], tablefmt="grid"))
+
+    def show_voter_list_admin(self):
+        # with open("doc_files/voterlist.txt", "r") as file:
+        #     lines = file.readlines()
+        #     data = [line.strip().split("\t") for line in lines]
+
+        # header = ["Voter SNO", "Name of Voter", "Date of Birth", "Address", "Password"]
+
+        data = read_file(headers=None, FILE_NAME=self.voter_list_file)
+
+        print(tabulate(data, headers=self.headers, tablefmt="grid"))
 
 
-    @classmethod
-    def show_voter_list_admin(cls):
-        with open("doc_files/voterlist.txt", "r") as file:
-            lines = file.readlines()
-            data = [line.strip().split("\t") for line in lines]
+    def generate_voter_sno(self):
+        # if not os.path.exists("doc_files/voterlist.txt"):
+        #     with open("doc_files/voterlist.txt", "w"):
+        #         pass
 
-        header = ["Voter SNO", "Name of Voter", "Date of Birth", "Address", "Password"]
-        print(tabulate(data, headers=header, tablefmt="grid"))
+        # with open("doc_files/voterlist.txt", "r") as file:
+        #     lines = file.readlines()
 
+        data = read_file(headers=None, FILE_NAME=self.voter_list_file)
 
-    @classmethod
-    def generate_voter_sno(cls):
-        if not os.path.exists("doc_files/voterlist.txt"):
-            with open("doc_files/voterlist.txt", "w"):
-                pass
-
-        with open("doc_files/voterlist.txt", "r") as file:
-            lines = file.readlines()
-
-        if lines:
-            last_serial_number = int(lines[-1].split("\t")[0])
+        if data:
+            last_serial_number = int(data[-1][0])
             voter_sno = last_serial_number + 1
         else:
-            voter_sno = 1
+            voter_sno = 100
 
-        return voter_sno
+        return str(voter_sno)
 
-        numbered_data1 = [[i + 1] + data[i] for i in range(len(data))]
-        return str(len(numbered_data1) + 1)
+        # numbered_data1 = [[i + 1] + data[i] for i in range(len(data))]
+        # return str(len(numbered_data1) + 1)
     
     def generate_password(self):
         password = str(uuid.uuid4().int)[:8]

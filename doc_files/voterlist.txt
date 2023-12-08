@@ -1,3 +1,4 @@
-1	Ishan Khatri	2003/06/31	Nepal	12341	
-2	Woho haha	2001/04/13	Gwarko	1234
-3	Anuj Bhattari	2002/04/15	Bhaktapur,Nepal	1234
+sno,name,dob,address,password,vote_status
+1,100,sadafs,2000/02/03,afwsd,anuj,1
+2,101,sgsd,1999/04/05,asdfsd,anuj2,0
+3,102,sadas,2000/01/0,dasad,sdasad,0
