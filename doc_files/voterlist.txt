@@ -2,4 +2,4 @@ SN,sno,name,dob,address,password,vote_status
 1,100,sadafs,2000/02/03,afwsd,anuj,1
 2,101,sgsd,1999/04/05,asdfsd,anuj2,0
 3,102,sadas,2000/01/0,dasad,sdasad,0
-4,103,Isha Hitang,2002/04/12,Bhaktapur,Nepal,1234,0
+4,103,isha,2000/11/11,lala,iagag,0
